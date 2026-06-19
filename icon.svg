@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <g fill="#ffffff">
+    <!-- здание отеля -->
+    <rect x="150" y="150" width="212" height="244" rx="14" fill="#ffffff" opacity="0.96"/>
+    <rect x="150" y="150" width="212" height="46" rx="14" fill="#0c4a44" opacity="0.18"/>
+    <g fill="#0f766e">
+      <rect x="178" y="214" width="34" height="34" rx="6"/>
+      <rect x="239" y="214" width="34" height="34" rx="6"/>
+      <rect x="300" y="214" width="34" height="34" rx="6"/>
+      <rect x="178" y="268" width="34" height="34" rx="6"/>
+      <rect x="239" y="268" width="34" height="34" rx="6"/>
+      <rect x="300" y="268" width="34" height="34" rx="6"/>
+      <rect x="231" y="330" width="50" height="64" rx="8"/>
+    </g>
+    <!-- галочка-чип -->
+    <circle cx="356" cy="356" r="58" fill="#16a34a"/>
+    <path d="M332 356 l16 16 l30 -34" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

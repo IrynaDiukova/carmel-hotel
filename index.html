@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+<meta name="theme-color" content="#0f766e" />
+<title>Онбординг · Отель Моше</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<style>
+  :root{
+    --bg:        var(--tg-theme-bg-color, #eef2f5);
+    --card:      var(--tg-theme-secondary-bg-color, #ffffff);
+    --text:      var(--tg-theme-text-color, #1f2933);
+    --muted:     var(--tg-theme-hint-color, #6b7785);
+    --accent:    var(--tg-theme-button-color, #0f766e);
+    --accent-ct: var(--tg-theme-button-text-color, #ffffff);
+    --link:      var(--tg-theme-link-color, #0f766e);
+    --line:      rgba(0,0,0,.08);
+    --in-bg:     #eef1f4;
+    --in-bd:     rgba(0,0,0,.08);
+    --in-tx:     #2a3542;
+    --out-bg:    #e7f6f3;
+    --out-bd:    #bfe6df;
+    --out-tx:    #0c4a44;
+    --ok:        #16a34a;
+    --danger:    #dc2626;
+    --shadow:    0 10px 30px rgba(16,42,67,.10);
+    --radius:    20px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:        var(--tg-theme-bg-color, #14181c);
+      --card:      var(--tg-theme-secondary-bg-color, #1e242b);
+      --text:      var(--tg-theme-text-color, #e6edf3);
+      --muted:     var(--tg-theme-hint-color, #93a1ad);
+      --accent:    var(--tg-theme-button-color, #2dd4bf);
+      --accent-ct: var(--tg-theme-button-text-color, #06302b);
+      --link:      var(--tg-theme-link-color, #2dd4bf);
+      --line:      rgba(255,255,255,.10);
+      --in-bg:     #272e36;
+      --in-bd:     rgba(255,255,255,.08);
+      --in-tx:     #d6dee6;
+      --out-bg:    #0f2c29;
+      --out-bd:    #1c4a44;
+      --out-tx:    #aef0e6;
+      --shadow:    0 10px 30px rgba(0,0,0,.45);
+    }
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);
+    display:flex;flex-direction:column;
+    min-height:100vh;min-height:100dvh;
+    overscroll-behavior-y:contain;-webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Шапка ---------- */
+  header{padding:calc(env(safe-area-inset-top) + 14px) 18px 10px;display:flex;flex-direction:column;gap:10px}
+  .topline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .brand{display:flex;align-items:center;gap:9px;min-width:0}
+  .brand .logo{
+    width:30px;height:30px;flex:0 0 auto;border-radius:9px;
+    background:linear-gradient(135deg,var(--accent),#0ea5a0);
+    display:grid;place-items:center;font-size:16px;box-shadow:0 4px 12px rgba(15,118,110,.35);
+  }
+  .brand b{font-size:15px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+  .counter{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+  .progress > i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--accent),#0ea5a0);transition:width .35s cubic-bezier(.2,.8,.2,1)}
+
+  /* ---------- Сцена ---------- */
+  /* main прокручивается целиком (шапка и кнопки зафиксированы),
+     margin:auto центрирует карточку и корректно скроллится к началу. */
+  main{flex:1;display:flex;flex-direction:column;padding:8px 16px 4px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+  main::-webkit-scrollbar{width:6px}
+  main::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .stage{width:100%;max-width:520px;margin:auto;display:flex}
+
+  .card{
+    width:100%;
+    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:20px 18px;border:1px solid var(--line);
+    display:flex;flex-direction:column;gap:14px;
+    animation:cardIn .32s cubic-bezier(.2,.8,.2,1);
+  }
+  .card.back{animation:cardInBack .32s cubic-bezier(.2,.8,.2,1)}
+  @keyframes cardIn{from{opacity:0;transform:translateX(28px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes cardInBack{from{opacity:0;transform:translateX(-28px) scale(.98)}to{opacity:1;transform:none}}
+
+  .card-head{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+  .emoji{width:46px;height:46px;flex:0 0 auto;border-radius:13px;background:var(--out-bg);border:1px solid var(--out-bd);display:grid;place-items:center;font-size:24px}
+  .card-head .meta{min-width:0}
+  .eyebrow{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+  .scr-title{font-size:19px;font-weight:800;line-height:1.25;margin-top:2px}
+
+  /* тело карточки (контент-блоки) */
+  .card-body{display:flex;flex-direction:column;gap:13px}
+
+  /* ---------- Блоки контента ---------- */
+  .blk-h{font-size:15px;font-weight:800;color:var(--accent);letter-spacing:.2px;margin-top:2px}
+  .blk-p{margin:0;font-size:15.5px;line-height:1.55}
+  .blk-p b{font-weight:800}
+  .blk-list{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+  .blk-list li{position:relative;padding-left:26px;font-size:15px;line-height:1.5}
+  .blk-list li::before{content:"";position:absolute;left:8px;top:9px;width:7px;height:7px;border-radius:99px;background:var(--accent)}
+  ol.blk-list{counter-reset:n}
+  ol.blk-list li{padding-left:34px}
+  ol.blk-list li::before{counter-increment:n;content:counter(n);top:0;left:0;width:24px;height:24px;border-radius:8px;background:var(--accent);color:var(--accent-ct);font-size:13px;font-weight:800;display:grid;place-items:center}
+
+  /* чат-пузыри: задание (слева) и твой ответ (справа) */
+  .chat{display:flex;flex-direction:column;gap:5px}
+  .chat.in{align-items:flex-start}
+  .chat.out{align-items:flex-end}
+  .b-label{font-size:11px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .b-label::before{content:"";width:6px;height:6px;border-radius:99px;background:currentColor;opacity:.6}
+  .bubble{
+    max-width:88%;padding:11px 14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    font-size:15.5px;line-height:1.5;word-break:break-word;
+  }
+  .bubble.in{background:var(--in-bg);border:1px solid var(--in-bd);color:var(--in-tx);border-radius:14px 14px 14px 4px}
+  .bubble.out{background:var(--out-bg);border:1px solid var(--out-bd);color:var(--out-tx);border-radius:14px 14px 4px 14px}
+
+  /* пояснение */
+  .note{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.5;background:rgba(15,118,110,.06);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+  .note .i{flex:0 0 auto;font-size:17px;margin-top:1px}
+  .note.alert{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.28)}
+
+  .callout{font-size:15px;line-height:1.5;font-weight:600;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.28);border-radius:12px;padding:12px 14px}
+
+  /* фразы на иврите */
+  .phrases{display:flex;flex-direction:column;gap:10px}
+  .phrase{border-left:3px solid var(--accent);padding:2px 0 2px 12px}
+  .phrase .heb{font-weight:700;font-style:italic;color:var(--accent);font-size:15.5px}
+  .phrase .rus{color:var(--muted);font-size:14px;margin-top:1px}
+
+  /* коды от комнат */
+  .pins{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .pin-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .pin-row:last-child{border-bottom:none}
+  .pin-row.head{background:rgba(15,118,110,.08);font-family:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+  .pin-row .room{font-weight:700}
+  .pin-row .code{color:var(--accent);letter-spacing:3px;font-weight:600}
+
+  .ack{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ok);opacity:0;height:0;overflow:hidden;transition:opacity .25s}
+  .ack.show{opacity:1;height:auto}
+
+  /* финал */
+  .final{text-align:center;align-items:center;justify-content:center;gap:10px}
+  .final .big{font-size:54px;line-height:1}
+  .final h2{font-size:22px;margin:0;font-weight:800;line-height:1.25}
+  .final p{color:var(--muted);font-size:15px;margin:0;line-height:1.5}
+  .final .stat{display:inline-flex;gap:6px;align-items:center;background:var(--out-bg);border:1px solid var(--out-bd);color:var(--out-tx);padding:7px 13px;border-radius:99px;font-size:13px;font-weight:700;margin-top:4px}
+
+  /* ---------- Навигация ---------- */
+  footer{padding:10px 16px calc(env(safe-area-inset-bottom) + 14px);display:flex;flex-direction:column;gap:10px;max-width:552px;width:100%;margin:0 auto}
+  .nav{display:flex;gap:10px;align-items:stretch}
+  button{font-family:inherit;font-size:16px;font-weight:700;border:none;border-radius:14px;cursor:pointer;padding:14px 16px;transition:transform .08s ease,opacity .15s,background .15s;display:flex;align-items:center;justify-content:center;gap:7px}
+  button:active{transform:scale(.97)}
+  button:disabled{opacity:.4;cursor:default}
+  .btn-ghost{background:transparent;color:var(--text);border:1.5px solid var(--line);flex:0 0 auto;min-width:104px}
+  .btn-ok{background:var(--accent);color:var(--accent-ct);flex:1;box-shadow:0 6px 18px rgba(15,118,110,.30)}
+  .btn-ok.done{background:var(--ok);box-shadow:0 6px 18px rgba(22,163,74,.30)}
+  .btn-next{background:transparent;color:var(--link);border:1.5px solid var(--line);flex:0 0 auto;min-width:104px}
+  .btn-restart{background:var(--accent);color:var(--accent-ct);width:100%;box-shadow:0 6px 18px rgba(15,118,110,.30)}
+  .hint{text-align:center;font-size:12px;color:var(--muted)}
+
+  @media (max-width:360px){
+    .scr-title{font-size:17px}
+    .btn-ghost,.btn-next{min-width:80px;padding:14px 10px}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="topline">
+      <div class="brand"><span class="logo">🏨</span><b>Отель Моше · обучение</b></div>
+      <span class="counter" id="counter"></span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+  </header>
+
+  <main><div class="stage" id="stage"></div></main>
+
+  <footer id="footer"></footer>
+
+<script>
+/* ===================== ДАННЫЕ ===================== */
+/* Блоки внутри экрана:
+   {h}        — подзаголовок
+   {p}        — абзац (поддерживает \n и *жирный*)
+   {list,ordered} — список (маркированный / нумерованный)
+   {task}     — входящее задание от Моше (серый пузырь слева)
+   {reply}    — твой ответ (бирюзовый пузырь справа)
+   {msg}      — что ты пишешь сам (бирюзовый пузырь справа)
+   {note,alert} — пояснение «что это значит»
+   {callout}  — выделенная важная строка
+   {phrases:[[ивр,рус],...]}  {pins:[[комната,код],...]}  */
+const SCREENS = [
+  { sec:"Начало", icon:"👋", title:"Привет!", blocks:[
+    { p:"Этот сайт научит тебя основам рабочих заданий в отеле *Моше*!" }
+  ]},
+
+  { sec:"Правила", icon:"⭐", title:"Три главных правила", blocks:[
+    { p:"Отлично :)\nВо-первых, есть 3 главных правила — в порядке важности:" },
+    { list:[
+      "Нельзя, чтобы люди долго стояли внизу",
+      "Нужно, чтобы комната была максимально чистой",
+      "Нужно навести чистоту в комнате за 30–45 мин"
+    ], ordered:true }
+  ]},
+
+  { sec:"Правила", icon:"📞", title:"Сомневаешься — звони Моше", blocks:[
+    { h:"Второй важный момент" },
+    { p:"Если ты не понимаешь, что надо делать, или сомневаешься — лучше всего позвонить *Моше*! Это будет наиболее правильное решение." },
+    { h:"Кроме этого" },
+    { p:"Мы всегда делаем именно то, что написано в задании. Если ты не можешь это сделать по какой-то причине — нужно звонить *Моше*!" }
+  ]},
+
+  { sec:"Правила", icon:"✋", title:"Умей говорить «нет»", blocks:[
+    { p:"«Можно мы не будем платить залог?» — *НЕТ*.\n«Можно мы останемся подольше?» — *НЕТ*.\n«Заходи в номер, обсудим вопрос». — *НЕТ*." },
+    { callout:"В любой такой ситуации звоним Моше. Ты не можешь выполнить просьбу клиента напрямую." },
+    { p:"Например, гость хочет ещё полотенца — скажи, чтобы он *звонил менеджеру*. После того как менеджер напишет тебе, ты принесёшь." }
+  ]},
+
+  { sec:"Правила", icon:"👀", title:"Следи за происходящим в номерах", blocks:[
+    { list:[
+      "Увидел у гостей *красное вино* — сообщи Моше.",
+      "При уборке постельное бельё испачкано красным вином — обязательно сообщи Моше.",
+      "Что-то *сломано* — сфотографируй и отправь Моше с номером комнаты.",
+      "Что-то *оставили* — сфотографируй и отправь Моше с номером комнаты.",
+      "Увидел *таракана* — сфотографируй и отправь Моше с номером комнаты.",
+      "В комнате живут *больше 2 человек* (видишь или слышишь) — сообщи Моше.",
+      "На заселение пришли *двое мужчин* — сообщи Моше: могут привести ещё людей и устроить вечеринку."
+    ]}
+  ]},
+
+  { sec:"Правила", icon:"⚡", title:"Главное про отчёты", blocks:[
+    { h:"ВАЖНО" },
+    { p:"После выполнения *любого* задания — сразу же напиши об этом!" },
+    { note:"Дальше ты увидишь примеры заданий и того, как на них отвечать." }
+  ]},
+
+  { sec:"Иврит", icon:"🗣️", title:"Полезные фразы на иврите", blocks:[
+    { phrases:[
+      ["Hetkasher le menachel", "Позвоните менеджеру."],
+      ["Ata/at mhake le Andrey/Nikita?", "Вы ждёте Андрея/Никиту?"],
+      ["Mehakim leka sham", "Вас там встретят."],
+      ["Toda, bevaqasha, sliha", "Спасибо, пожалуйста, извините."]
+    ]}
+  ]},
+
+  { sec:"Справка", icon:"🔢", title:"Коды от комнат", blocks:[
+    { p:"Слева — номера комнат, справа — пин-коды для входа." },
+    { pins:[
+      ["1620","4114"],["1614","3424"],["1613","c638"],["1603","3414"],
+      ["1512","3434"],["1402","2344"],["1320","2133"],["1302","4421"],
+      ["1206","3143"],["1112","4234"],["1111","3232"],["1110","3422"],
+      ["1109","3411"],["820","3111"],["819","2131"],["812","3412"],
+      ["705","2122"],["307","2111"]
+    ]},
+    { reply:"got it" },
+    { note:'Ты отвечаешь "got it" — значит «я понял».' }
+  ]},
+
+  { sec:"Пример задания", icon:"🧽", title:"Помыть комнату", blocks:[
+    { task:"1402" },
+    { reply:"ok" },
+    { note:"Помой комнату 1402." }
+  ]},
+
+  { sec:"Пример задания", icon:"🎟️", title:"Взять чип у Ли", blocks:[
+    { task:"Li cp" },
+    { reply:"Li cp done" },
+    { note:"Возьми у Ли один чип." }
+  ]},
+
+  { sec:"Пример задания", icon:"🔑", title:"Заселение: деньги и залог", blocks:[
+    { task:"0 1603\n150pls100" },
+    { reply:"0 1603\n150pls100 done" },
+    { note:"Спустись в «ноль» (0 = лобби), встреть людей и отведи их в комнату 1603. Забери 150 шекелей + 100 шекелей залога." }
+  ]},
+
+  { sec:"Пример задания", icon:"📋", title:"Лист комнат на мойку", blocks:[
+    { task:"1402\n1320\n812 11\n1512 11\n819 12\n1614 12.30\n1603 13.10" },
+    { reply:"ok" },
+    { note:"Лист комнат, которые надо помыть. Время рядом с комнатой — во сколько она освободится для мойки." }
+  ]},
+
+  { sec:"Пример задания", icon:"✅", title:"Закончил мойку", blocks:[
+    { msg:"1402 done" },
+    { note:"Так мы пишем, когда закончили мойку комнаты." }
+  ]},
+
+  { sec:"Пример задания", icon:"🌙", title:"Домыть и закончить смену", blocks:[
+    { task:"1603 patom conchili" },
+    { reply:"ok" },
+    { note:"Помой 1603, затем конец смены. Нужно отправить смс с твоим кодом из начала сменки." }
+  ]},
+
+  { sec:"Пример задания", icon:"🌙", title:"Конец смены", blocks:[
+    { task:"Conchili" },
+    { reply:"ok" },
+    { note:"Конец смены. Нужно отправить смс с твоим кодом из начала сменки." }
+  ]},
+
+  { sec:"Пример задания", icon:"🔑", title:"Заселение: отдать чип", blocks:[
+    { task:"0 1603\n150pls100 cp" },
+    { reply:"0 1603\n150pls100 cp done" },
+    { note:"Спустись в лобби, встреть людей и отведи в 1603. Забери 150 шекелей + 100 шекелей залога и после этого отдай им чип." }
+  ]},
+
+  { sec:"Пример задания", icon:"🚫", title:"Заселение: чип не взяли", blocks:[
+    { task:"0 1603\n150pls100 cp" },
+    { reply:"0 1603\n150pls100 no cp" },
+    { note:'Всё то же самое, но люди не захотели брать чип (или его не было). В ответе пишем то же, НО без слова cp, и дописываем "no cp" — чип не взяли.' }
+  ]},
+
+  { sec:"Пример задания", icon:"💰", title:"Заселение: изменить залог", blocks:[
+    { task:"0 1603\n150pls100 cp" },
+    { reply:"0 1603\n150pls150 cp done\nFixed 150 pickadon" },
+    { note:'Люди дали больше денег, чем надо (вероятно, не было размена). В ответе пишем то же, НО с изменённой суммой залога, и дописываем "Fixed 150 pickadon" — изменил сумму залога.' }
+  ]},
+
+  { sec:"Пример задания", icon:"💵", title:"Выселение: вернуть залог", blocks:[
+    { task:"1512 cp\nAday 200 cp" },
+    { reply:"1512 cp\nAday 200 cp done" },
+    { note:"Пойди в комнату 1512, забери у них чип и отдай им 200 шекелей залога." }
+  ]},
+
+  { sec:"Пример задания", icon:"🎟️", title:"Старт смены: взять чипы", blocks:[
+    { msg:"Closet took 4 cps" },
+    { note:"Пишем в начале смены, когда берём из кошелька чипы на сменку." }
+  ]},
+
+  { sec:"Пример задания", icon:"🛏️", title:"Лишнее бельё", blocks:[
+    { msg:"1512 2 odeyala, 4 pillows" },
+    { note:"Пишем, когда в ходе уборки нашли в номере больше белья, чем нужный минимум. Лишнее отнести в шкафчик." }
+  ]},
+
+  { sec:"Пример задания", icon:"🧾", title:"Конец смены: касса", blocks:[
+    { msg:"Closet 5 cps\n1235 ILS" },
+    { note:"Пишем в конце сменки: положил в кошелёк в шкафу 5 чипов и 1235 шекелей." }
+  ]},
+
+  { sec:"Пример задания", icon:"📺", title:"Отдых", blocks:[
+    { task:"1603 tv" },
+    { reply:"ok" },
+    { note:"Отдыхай в комнате 1603." }
+  ]},
+
+  { sec:"Пример задания", icon:"🛗", title:"Отправить на этаж", blocks:[
+    { task:"0 8" },
+    { reply:"0 8 done" },
+    { note:"Пойди в лобби, встреть людей и отправь их на 8 этаж. С НИМИ НЕ ПОДНИМАЙСЯ." }
+  ]},
+
+  { sec:"Пример задания", icon:"🧖", title:"Дополнительные полотенца", blocks:[
+    { task:"1614 aday 2 pltmsa" },
+    { reply:"1614 aday 2 pltmsa done" },
+    { note:"Пойди в комнату 1614 и дай им два новых дополнительных полотенца." }
+  ]},
+
+  { sec:"Пример задания", icon:"🔄", title:"Замена полотенец", blocks:[
+    { task:"1614 paminay palatensa" },
+    { reply:"1614 paminay palatensa" },
+    { note:"Пойди в комнату 1614 и поменяй им столько полотенец, сколько они дадут грязных. Возьми с собой на всякий случай 4 полотенца." }
+  ]},
+
+  { sec:"Пример задания", icon:"🍎", title:"Заканчивается снаряжение", blocks:[
+    { msg:"Closet almost out of fruits and circle cakes" },
+    { note:"Пишем, когда в шкафчике почти закончилось снаряжение. Пиши заранее — к следующему приходу новое будет готово. Если всё закончилось и надо взять ещё — смело звони Моше.", alert:true }
+  ]},
+
+  { sec:"Пример задания", icon:"🧴", title:"Заканчивается средство", blocks:[
+    { msg:"I'm almost out of smell spray" },
+    { note:"Пишем, когда почти закончилось какое-либо средство для мытья. Тебе дадут новое. Если совсем закончилось — смело звони Моше.", alert:true }
+  ]},
+];
+
+const FINAL = SCREENS.length;
+const TOTAL = SCREENS.length;
+const LS_POS = "hotel.onb.pos";
+const LS_ACK = "hotel.onb.ack";
+
+/* ===================== СОСТОЯНИЕ ===================== */
+// SDK Telegram грузится только при запуске из Telegram (см. bootTelegram внизу),
+// поэтому в обычном браузере/PWA tg остаётся null, и приложение работает на DOM-кнопках.
+let tg = null, tgV61 = false, tgV62 = false;
+let idx = clampIdx(parseInt(localStorage.getItem(LS_POS) || "0", 10));
+let acked = loadAck();
+let lastDir = 1;
+
+const stage   = document.getElementById("stage");
+const mainEl  = document.querySelector("main");
+const footer  = document.getElementById("footer");
+const bar     = document.getElementById("bar");
+const counter = document.getElementById("counter");
+
+/* ===================== УТИЛИТЫ ===================== */
+function clampIdx(n){ return Math.max(0, Math.min(FINAL, isNaN(n)?0:n)); }
+function loadAck(){ try{ return new Set(JSON.parse(localStorage.getItem(LS_ACK) || "[]")); }catch{ return new Set(); } }
+function saveAck(){ localStorage.setItem(LS_ACK, JSON.stringify([...acked])); }
+function save(){ localStorage.setItem(LS_POS, String(idx)); }
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function nl(s){ return esc(s).replace(/\n/g,"<br>"); }
+function fmt(s){ return esc(s).replace(/\n/g,"<br>").replace(/\*([^*]+)\*/g,"<b>$1</b>"); }
+function haptic(type){ try{ if(tgV61 && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(type); }catch{} }
+
+/* ===================== РЕНДЕР БЛОКОВ ===================== */
+function bubble(dir, label, text){
+  return `<div class="chat ${dir}"><div class="b-label">${esc(label)}</div><div class="bubble ${dir}">${nl(text)}</div></div>`;
+}
+function phrasesHtml(rows){
+  return `<div class="phrases">` + rows.map(([h,r]) =>
+    `<div class="phrase"><div class="heb">${esc(h)}</div><div class="rus">${esc(r)}</div></div>`
+  ).join("") + `</div>`;
+}
+function pinsHtml(rows){
+  return `<div class="pins"><div class="pin-row head"><span>Комната</span><span>Код</span></div>` +
+    rows.map(([room,code]) =>
+      `<div class="pin-row"><span class="room">${esc(room)}</span><span class="code">${esc(code)}</span></div>`
+    ).join("") + `</div>`;
+}
+function renderBlocks(blocks){
+  return blocks.map(b => {
+    if(b.h != null)     return `<div class="blk-h">${esc(b.h)}</div>`;
+    if(b.p != null)     return `<p class="blk-p">${fmt(b.p)}</p>`;
+    if(b.list)          return `<${b.ordered?"ol":"ul"} class="blk-list">${b.list.map(i=>`<li>${fmt(i)}</li>`).join("")}</${b.ordered?"ol":"ul"}>`;
+    if(b.task != null)  return bubble("in","Задание от Моше", b.task);
+    if(b.reply != null) return bubble("out","Твой ответ", b.reply);
+    if(b.msg != null)   return bubble("out","Что ты пишешь", b.msg);
+    if(b.callout != null) return `<div class="callout">${fmt(b.callout)}</div>`;
+    if(b.note != null)  return `<div class="note${b.alert?" alert":""}"><span class="i">${b.alert?"⚠️":"💡"}</span><span>${fmt(b.note)}</span></div>`;
+    if(b.phrases)       return phrasesHtml(b.phrases);
+    if(b.pins)          return pinsHtml(b.pins);
+    return "";
+  }).join("");
+}
+
+/* ===================== РЕНДЕР ЭКРАНА ===================== */
+function render(){
+  if(idx >= FINAL) return renderFinal();
+  const s = SCREENS[idx];
+  const isAck = acked.has(idx);
+  const dirClass = lastDir < 0 ? " back" : "";
+
+  stage.innerHTML = `
+    <div class="card${dirClass}" id="card">
+      <div class="card-head">
+        <div class="emoji">${s.icon}</div>
+        <div class="meta">
+          <div class="eyebrow">${esc(s.sec || "")}</div>
+          <div class="scr-title">${esc(s.title)}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${renderBlocks(s.blocks)}
+        <div class="ack${isAck?" show":""}">✓ Отмечено как прочитано</div>
+      </div>
+    </div>`;
+
+  footer.innerHTML = `
+    <div class="nav">
+      <button class="btn-ghost" id="prev" ${idx===0?"disabled":""}>‹ Назад</button>
+      <button class="btn-ok ${isAck?"done":""}" id="ok">${isAck?"ok ✓":"ok"}</button>
+      <button class="btn-next" id="next">Далее ›</button>
+    </div>
+    <div class="hint">Свайп ← → · стрелки на клавиатуре · «ok» = прочитал</div>`;
+
+  document.getElementById("prev").onclick = prev;
+  document.getElementById("next").onclick = next;
+  document.getElementById("ok").onclick   = ackAndNext;
+  updateChrome(); syncTelegram();
+}
+
+function renderFinal(){
+  stage.innerHTML = `
+    <div class="card final" id="card">
+      <div class="big">🎉</div>
+      <h2>На этом всё.<br>Удачи тебе и отличных сменок :)</h2>
+      <p>Ты прошёл все ${TOTAL} карточек. Возвращайся сюда, если что-то забыл.</p>
+      <div class="stat">📖 Отмечено как прочитано: ${acked.size} из ${TOTAL}</div>
+    </div>`;
+  footer.innerHTML = `
+    <div class="nav">
+      <button class="btn-ghost" id="prev">‹ Назад</button>
+      <button class="btn-restart" id="restart">⟳ В начало</button>
+    </div>`;
+  document.getElementById("prev").onclick = prev;
+  document.getElementById("restart").onclick = restart;
+  updateChrome(); syncTelegram();
+}
+
+function updateChrome(){
+  counter.textContent = (idx >= FINAL ? TOTAL : idx+1) + " / " + TOTAL;
+  bar.style.width = (idx >= FINAL ? 100 : ((idx+1)/TOTAL)*100) + "%";
+}
+
+/* ===================== ПЕРЕХОДЫ ===================== */
+function go(n, dir){ lastDir = dir; idx = clampIdx(n); save(); render(); mainEl.scrollTop = 0; }
+function next(){ haptic("light"); go(idx+1, 1); }
+function prev(){ haptic("light"); go(idx-1, -1); }
+function ackAndNext(){ if(idx < FINAL){ acked.add(idx); saveAck(); } haptic("medium"); go(idx+1, 1); }
+function restart(){ haptic("light"); go(0, -1); }
+
+/* ===================== КЛАВИАТУРА / СВАЙПЫ ===================== */
+window.addEventListener("keydown", e=>{
+  if(e.key==="ArrowRight") next();
+  else if(e.key==="ArrowLeft") prev();
+  else if(e.key==="Enter"||e.key===" "){ e.preventDefault(); if(idx<FINAL) ackAndNext(); else restart(); }
+});
+let tsx=0, tsy=0, swiping=false;
+document.addEventListener("touchstart", e=>{ if(e.touches.length!==1) return; tsx=e.touches[0].clientX; tsy=e.touches[0].clientY; swiping=true; }, {passive:true});
+document.addEventListener("touchend", e=>{
+  if(!swiping) return; swiping=false;
+  const dx=e.changedTouches[0].clientX - tsx, dy=e.changedTouches[0].clientY - tsy;
+  if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)*1.4){ if(dx<0) next(); else prev(); }
+}, {passive:true});
+
+/* ===================== TELEGRAM WEB APP ===================== */
+function syncTelegram(){
+  if(!tg) return;
+  try{
+    if(tgV61 && tg.BackButton){
+      if(idx > 0){ tg.BackButton.offClick(prev); tg.BackButton.onClick(prev); tg.BackButton.show(); }
+      else { tg.BackButton.hide(); }
+    }
+    const mb = tg.MainButton;
+    mb.offClick(tgMain);
+    if(idx >= FINAL) mb.setText("⟳ В начало");
+    else if(idx === FINAL-1) mb.setText("ok · завершить");
+    else mb.setText("ok · далее");
+    mb.onClick(tgMain); mb.show();
+  }catch(e){}
+}
+function tgMain(){ if(idx >= FINAL) restart(); else ackAndNext(); }
+
+function bootTelegram(){
+  const w = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+  if(!w || !(w.platform && w.platform !== "unknown")) return;
+  tg = w;
+  tgV61 = !!(tg.isVersionAtLeast && tg.isVersionAtLeast("6.1"));
+  tgV62 = !!(tg.isVersionAtLeast && tg.isVersionAtLeast("6.2"));
+  try{
+    tg.ready(); tg.expand();
+    if(tgV61 && tg.setHeaderColor) tg.setHeaderColor("secondary_bg_color");
+    if(tgV62 && tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+  }catch(e){}
+  syncTelegram();
+}
+(function maybeLoadTelegram(){
+  const u = (location.hash || "") + " " + (location.search || "");
+  if(!/tgWebApp/i.test(u)) return;
+  const s = document.createElement("script");
+  s.src = "https://telegram.org/js/telegram-web-app.js";
+  s.async = true; s.onload = bootTelegram;
+  document.head.appendChild(s);
+})();
+
+/* ===================== SERVICE WORKER ===================== */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load", ()=> navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+
+/* ===================== СТАРТ ===================== */
+render();
+</script>
+</body>
+</html>
