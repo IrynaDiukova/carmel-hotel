@@ -140,13 +140,10 @@
   .phrase .heb{font-weight:700;font-style:italic;color:var(--accent);font-size:15.5px}
   .phrase .rus{color:var(--muted);font-size:14px;margin-top:1px}
 
-  /* коды от комнат */
-  .pins{border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .pin-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-  .pin-row:last-child{border-bottom:none}
-  .pin-row.head{background:rgba(15,118,110,.08);font-family:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
-  .pin-row .room{font-weight:700}
-  .pin-row .code{color:var(--accent);letter-spacing:3px;font-weight:600}
+  /* коды от комнат — как одно сообщение в WhatsApp (комната и код рядом) */
+  .bubble.in.pins-msg{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.45;max-width:74%}
+  .pin-line{display:flex;gap:9px}
+  .pin-line .r{min-width:4ch;font-weight:600}
 
   .ack{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ok);opacity:0;height:0;overflow:hidden;transition:opacity .25s}
   .ack.show{opacity:1;height:auto}
@@ -257,7 +254,7 @@ const SCREENS = [
   ]},
 
   { sec:"Справка", icon:"🔢", title:"Коды от комнат", blocks:[
-    { p:"Слева — номера комнат, справа — пин-коды для входа." },
+    { p:"Это *одно сообщение*: слева — номер комнаты, справа — код от двери." },
     { pins:[
       ["1620","4114"],["1614","3424"],["1613","c638"],["1603","3414"],
       ["1512","3434"],["1402","2344"],["1320","2133"],["1302","4421"],
@@ -423,10 +420,12 @@ function phrasesHtml(rows){
   ).join("") + `</div>`;
 }
 function pinsHtml(rows){
-  return `<div class="pins"><div class="pin-row head"><span>Комната</span><span>Код</span></div>` +
+  return `<div class="chat in"><div class="b-label">Задание от Моше</div>` +
+    `<div class="bubble in pins-msg">` +
     rows.map(([room,code]) =>
-      `<div class="pin-row"><span class="room">${esc(room)}</span><span class="code">${esc(code)}</span></div>`
-    ).join("") + `</div>`;
+      `<span class="pin-line"><span class="r">${esc(room)}</span><span class="c">${esc(code)}</span></span>`
+    ).join("") +
+    `</div></div>`;
 }
 function renderBlocks(blocks){
   return blocks.map(b => {
