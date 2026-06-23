@@ -3,12 +3,13 @@
    - HTML/навигация  → network-first (правки контента доходят сразу при сети,
      офлайн — из кэша);
    - прочие ресурсы  → cache-first (быстро, обновляются в фоне). */
-const CACHE = "hotel-onb-v3";
+const CACHE = "carmel-onb-v1";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icon.svg"
+  "./icon.svg",
+  "./carmel-logo.svg"
 ];
 
 self.addEventListener("install", (e) => {

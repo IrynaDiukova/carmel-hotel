@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" width="280" height="280" role="img" aria-label="Carmel Hotel — מלון כרמל">
+  <defs>
+    <linearGradient id="sw" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#37c4b4"/>
+      <stop offset="1" stop-color="#149b8e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- плитка -->
+  <rect x="8" y="8" width="264" height="264" rx="46" fill="#ffffff" stroke="#e7e9ec" stroke-width="2"/>
+
+  <!-- свуш (мазок) -->
+  <path d="M58,126 C92,109 130,105 160,114 C182,121 198,117 213,101
+           C207,119 186,130 159,126 C129,122 95,123 65,136 Z"
+        fill="url(#sw)"/>
+  <path d="M150,112 C176,108 196,110 213,101 C198,104 178,104 156,107 Z"
+        fill="#37c4b4" opacity="0.55"/>
+
+  <!-- מלון כרמל -->
+  <text x="140" y="186" text-anchor="middle" direction="rtl"
+        font-family="Arial, 'Segoe UI', 'Noto Sans Hebrew', sans-serif"
+        font-size="48" font-weight="600" fill="#1aa698" letter-spacing="2">מלון כרמל</text>
+
+  <!-- CARMEL HOTEL -->
+  <text x="140" y="222" text-anchor="middle"
+        font-family="'Segoe UI', Arial, sans-serif"
+        font-size="21" font-weight="400" fill="#9aa0a6" letter-spacing="6">CARMEL HOTEL</text>
+</svg>

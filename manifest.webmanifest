@@ -1,14 +1,14 @@
 {
-  "name": "Онбординг — отель Моше",
-  "short_name": "Отель Моше",
-  "description": "Интерактивный тренажёр для персонала отеля Моше: правила, фразы, коды комнат и формат отчётов менеджеру.",
+  "name": "Carmel Hotel — стандарты работы",
+  "short_name": "Carmel Hotel",
+  "description": "Стандарты работы сотрудников отеля Кармель: правила, коды номеров, примеры заданий WhatsApp, проверка и подготовка номеров.",
   "lang": "ru",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#eef2f5",
-  "theme_color": "#0f766e",
+  "background_color": "#e7f1fb",
+  "theme_color": "#cfe4f5",
   "icons": [
     {
       "src": "icon.svg",
